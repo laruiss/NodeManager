@@ -1,0 +1,50 @@
+name: Publish NodeManager to GitHub Packages
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install and import PSResourceGet
+        shell: pwsh
+        run: |
+          if (-not (Get-Module -ListAvailable -Name Microsoft.PowerShell.PSResourceGet)) {
+            Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+            Install-Module -Name Microsoft.PowerShell.PSResourceGet -Scope CurrentUser -Force -AllowClobber
+          }
+          Import-Module Microsoft.PowerShell.PSResourceGet -ErrorAction Stop
+
+      - name: Validate module manifest
+        shell: pwsh
+        run: |
+          Test-ModuleManifest ./NodeManager.psd1 | Out-Null
+
+      - name: Register GitHub Packages repository
+        shell: pwsh
+        env:
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          $uri = "https://nuget.pkg.github.com/$env:OWNER/index.json"
+          if (Get-PSResourceRepository -Name GitHubPackages -ErrorAction SilentlyContinue) {
+            Unregister-PSResourceRepository -Name GitHubPackages
+          }
+          Register-PSResourceRepository -Name GitHubPackages -Uri $uri -Trusted -ErrorAction Stop
+
+      - name: Publish module
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          Publish-PSResource -Path . -Repository GitHubPackages -ApiKey $env:GITHUB_TOKEN -ErrorAction Stop
