@@ -35,12 +35,21 @@ NodeManager solves this by:
 
 ## Installation
 
-### Option 1: From PowerShell Gallery
+### Option 1: From GitHub Release package (recommended for teammates)
+
+Download the zip asset from [Release 1.0.2](https://github.com/laruiss/NodeManager/releases/tag/1.0.2), extract it, then copy the `NodeManager` folder to your user modules path:
+
+- Windows PowerShell: `$HOME\Documents\WindowsPowerShell\Modules\NodeManager`
+- PowerShell 7: `$HOME\Documents\PowerShell\Modules\NodeManager`
+
+Then open a new PowerShell session and run:
 
 ```powershell
-Install-Module NodeManager -Scope CurrentUser
-Import-Module NodeManager
+Import-Module NodeManager -Force
+Get-Command -Module NodeManager
 ```
+
+If `Get-Command` lists module commands, installation is complete.
 
 ### Option 2: From source
 

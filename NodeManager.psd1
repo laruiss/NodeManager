@@ -12,7 +12,7 @@
 RootModule = 'NodeManager.psm1'
 
 # Numéro de version de ce module.
-ModuleVersion = '1.0.1'
+ModuleVersion = '1.0.2'
 
 # Éditions PS prises en charge
 # CompatiblePSEditions = @()
@@ -126,7 +126,7 @@ PrivateData = @{
         # IconUri = ''
 
         # Propriété ReleaseNotes de ce module
-        ReleaseNotes = 'Correction : Install-NodeVersion et Use-NodeVersion resolvent desormais les versions courtes (majeures/lts) avant de construire les chemins, evitant un PATH pointant vers un dossier incomplet (ex: node-26 au lieu de node-26.3.0). Correction egalement du premier lancement de nodeuse qui ignorait la version demandee.'
+        ReleaseNotes = 'Documentation : reorganisation des options d installation dans le README (suppression de l option PowerShell Gallery non publiee, mise en avant du package de Release GitHub).'
 
     } # Fin de la table de hachage PSData
 
