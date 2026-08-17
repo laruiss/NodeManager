@@ -90,6 +90,10 @@ function Install-NodeVersion {
         [string]$Version
     )
 
+    if ($Version -notmatch "^\d+\.\d+\.\d+$") {
+        $Version = Resolve-NodeVersion $Version
+    }
+
     $root = Get-NodeRoot
 
     if (-not (Test-Path $root)) {
@@ -136,6 +140,10 @@ function Use-NodeVersion {
         [Parameter(Mandatory=$true)]
         [string]$Version
     )
+
+    if ($Version -notmatch "^\d+\.\d+\.\d+$") {
+        $Version = Resolve-NodeVersion $Version
+    }
 
     $root = Get-NodeRoot
     $target = "$root\node-v$Version"
@@ -237,7 +245,7 @@ function nodeuse {
     $root = Get-NodeRoot
 
     if (-not (Test-Path $root)) {
-        $resolved = Resolve-NodeVersion "lts"
+        $resolved = Resolve-NodeVersion $ShortVersion
         Install-NodeVersion $resolved
         Use-NodeVersion -Version "$resolved"
         return
@@ -248,7 +256,7 @@ function nodeuse {
         Select-Object -ExpandProperty Name |
         ForEach-Object { $_ -replace "^node-v", "" }
 
-    $match = $versions | Where-Object { $_ -like "$ShortVersion*" }
+    $match = $versions | Where-Object { $_ -eq $ShortVersion -or $_ -like "$ShortVersion.*" }
 
     if (-not $match) {
         $resolved = Resolve-NodeVersion $ShortVersion
@@ -257,7 +265,7 @@ function nodeuse {
         return
     }
 
-    $full = ($match | Select-Object -First 1)
+    $full = ($match | Sort-Object { [version]$_ } -Descending | Select-Object -First 1)
     Use-NodeVersion -Version "$full"
 }
 
