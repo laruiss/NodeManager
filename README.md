@@ -37,7 +37,7 @@ NodeManager solves this by:
 
 ### Option 1: From GitHub Release package (recommended for teammates)
 
-Download the zip asset from [Release 1.0.2](https://github.com/laruiss/NodeManager/releases/tag/1.0.2), extract it, then copy the `NodeManager` folder to your user modules path:
+Download the zip asset from [Release 1.1.0](https://github.com/laruiss/NodeManager/releases/tag/1.1.0), extract it, then copy the `NodeManager` folder to your user modules path:
 
 - Windows PowerShell: `$HOME\Documents\WindowsPowerShell\Modules\NodeManager`
 - PowerShell 7: `$HOME\Documents\PowerShell\Modules\NodeManager`
@@ -109,6 +109,7 @@ nrm 24.16.0
 - `Resolve-NodeVersion`: resolve lts or major to exact version
 - `nodeuse`: install if needed, then activate
 - `Remove-NodeVersion`: remove an installed version
+- `Unblock-NodeVersion`: unblock npm/npx PowerShell scripts for an installed version (defaults to the active version)
 
 ### Aliases
 
@@ -117,6 +118,7 @@ nrm 24.16.0
 - `nrm` -> Remove-NodeVersion
 - `nls` -> Get-NodeVersions
 - `node-auto` -> Invoke-NodeAuto
+- `unblock-node` -> Unblock-NodeVersion
 
 ## How npm global packages are handled
 

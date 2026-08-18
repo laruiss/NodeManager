@@ -307,6 +307,32 @@ function Remove-NodeVersion {
 
 <#
 .SYNOPSIS
+Débloque les scripts PowerShell npm/npx pour une version Node donnée.
+
+.PARAMETER Version
+Version exacte de Node.js dont les scripts doivent être débloqués.
+#>
+function Unblock-NodeVersion {
+    param(
+        [string]$Version = $env:NODE_ACTIVE_VERSION
+    )
+
+    if (-not $Version -or $Version.Trim() -eq "") {
+        Write-Host "Aucune version active. Précisez -Version."
+        return
+    }
+
+    $root = Get-NodeRoot
+    $target = "$root\node-v$Version"
+
+    Unblock-File -Path "$target\npm.ps1"
+    Unblock-File -Path "$target\npx.ps1"
+
+    Write-Host "Scripts npm/npx débloqués pour Node v$Version."
+}
+
+<#
+.SYNOPSIS
 Configure le prefix npm global pour la version Node active.
 #>
 function Set-NodeNpmGlobalPrefix {
@@ -379,6 +405,7 @@ Set-Alias ninst Install-NodeVersion
 Set-Alias nrm Remove-NodeVersion
 Set-Alias nls Get-NodeVersions
 Set-Alias node-auto Invoke-NodeAuto
+Set-Alias unblock-node Unblock-NodeVersion
 
 Sync-NodeSessionPath
 

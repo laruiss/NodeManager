@@ -12,7 +12,7 @@
 RootModule = 'NodeManager.psm1'
 
 # Numéro de version de ce module.
-ModuleVersion = '1.0.2'
+ModuleVersion = '1.1.0'
 
 # Éditions PS prises en charge
 # CompatiblePSEditions = @()
@@ -78,7 +78,8 @@ FunctionsToExport = @(
     'Use-NodeVersion',
     'Resolve-NodeVersion',
     'nodeuse',
-    'Remove-NodeVersion'
+    'Remove-NodeVersion',
+    'Unblock-NodeVersion'
 )
 
 # Applets de commande à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune applet de commande à exporter.
@@ -93,7 +94,8 @@ AliasesToExport = @(
     'ninst',
     'nrm',
     'nls',
-    'node-auto'
+    'node-auto',
+    'unblock-node'
 )
 
 # Ressources DSC à exporter depuis ce module
@@ -126,7 +128,7 @@ PrivateData = @{
         # IconUri = ''
 
         # Propriété ReleaseNotes de ce module
-        ReleaseNotes = 'Documentation : reorganisation des options d installation dans le README (suppression de l option PowerShell Gallery non publiee, mise en avant du package de Release GitHub).'
+        ReleaseNotes = 'Ajout de Unblock-NodeVersion (alias unblock-node) pour debloquer les scripts npm/npx PowerShell d une version Node installee, avec repli sur la version active si aucune version n est precisee.'
 
     } # Fin de la table de hachage PSData
 
