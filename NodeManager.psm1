@@ -7,14 +7,62 @@
 Lit un fichier .nvmrc et active la version Node correspondante.
 #>
 function Invoke-NodeAuto {
-    $nvmrc = Get-ChildItem -Path (Get-Location) -Filter ".nvmrc" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+    $nvmrc = Join-Path -Path (Get-Location).Path -ChildPath ".nvmrc"
+    $stateKey = $nvmrc
 
-    if ($nvmrc) {
-        $version = Get-Content $nvmrc.FullName
+    if (Test-Path -LiteralPath $nvmrc -PathType Leaf) {
+        $file = Get-Item -LiteralPath $nvmrc
+        $stateKey = "$nvmrc|$($file.LastWriteTimeUtc.Ticks)|$($file.Length)"
+    } else {
+        $stateKey = "$nvmrc|missing"
+    }
+
+    if ($script:nodeAutoLastState -eq $stateKey) {
+        return
+    }
+
+    $script:nodeAutoLastState = $stateKey
+
+    if (Test-Path -LiteralPath $nvmrc -PathType Leaf) {
+        $version = (Get-Content -LiteralPath $nvmrc -Raw).Trim()
+        $version = $version -replace "^v", ""
+
+        if (-not $version) {
+            Write-Error ".nvmrc est vide."
+            return
+        }
+
         Write-Host "Version détectée via .nvmrc : $version"
-        nodeuse $version
+        nodeuse -ShortVersion $version
     } else {
         Write-Host "Pas de .nvmrc trouvé."
+    }
+}
+
+<#
+.SYNOPSIS
+Active automatiquement la version Node au changement de dossier.
+#>
+function Enable-NodeAuto {
+    if ($global:NodeManagerPromptEnabled) {
+        return
+    }
+
+    $prompt = Get-Command prompt -CommandType Function -ErrorAction SilentlyContinue
+    if ($prompt) {
+        $global:NodeManagerOriginalPrompt = $prompt.ScriptBlock
+    }
+
+    $global:NodeManagerPromptEnabled = $true
+
+    function global:prompt {
+        Invoke-NodeAuto
+
+        if ($global:NodeManagerOriginalPrompt) {
+            & $global:NodeManagerOriginalPrompt
+        } else {
+            "PS $($executionContext.SessionState.Path.CurrentLocation)> "
+        }
     }
 }
 
@@ -407,6 +455,7 @@ Set-Alias nls Get-NodeVersions
 Set-Alias node-auto Invoke-NodeAuto
 Set-Alias unblock-node Unblock-NodeVersion
 
+Enable-NodeAuto
 Sync-NodeSessionPath
 
 Export-ModuleMember -Function * -Alias *

@@ -12,7 +12,7 @@
 RootModule = 'NodeManager.psm1'
 
 # Numéro de version de ce module.
-ModuleVersion = '1.1.0'
+ModuleVersion = '1.2.0'
 
 # Éditions PS prises en charge
 # CompatiblePSEditions = @()
@@ -71,6 +71,7 @@ PowerShellVersion = '5.1'
 # Fonctions à exporter à partir de ce module. Pour de meilleures performances, n’utilisez pas de caractères génériques et ne supprimez pas l’entrée. Utilisez un tableau vide si vous n’avez aucune fonction à exporter.
 FunctionsToExport = @(
     'Invoke-NodeAuto',
+    'Enable-NodeAuto',
     'Get-NodeLatestLTS',
     'Get-NodeRoot',
     'Get-NodeVersions',
@@ -128,7 +129,7 @@ PrivateData = @{
         # IconUri = ''
 
         # Propriété ReleaseNotes de ce module
-        ReleaseNotes = 'Ajout de Unblock-NodeVersion (alias unblock-node) pour debloquer les scripts npm/npx PowerShell d une version Node installee, avec repli sur la version active si aucune version n est precisee.'
+        ReleaseNotes = 'Ajout de la detection automatique de .nvmrc depuis le prompt PowerShell, avec installation a la demande de la version indiquee. Ajout de Enable-NodeAuto et mise en cache des verifications pour eviter les reactivations repetees.'
 
     } # Fin de la table de hachage PSData
 
