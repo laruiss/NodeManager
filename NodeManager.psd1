@@ -12,7 +12,7 @@
 RootModule = 'NodeManager.psm1'
 
 # Numéro de version de ce module.
-ModuleVersion = '1.2.0'
+ModuleVersion = '1.3.0'
 
 # Éditions PS prises en charge
 # CompatiblePSEditions = @()
@@ -129,7 +129,7 @@ PrivateData = @{
         # IconUri = ''
 
         # Propriété ReleaseNotes de ce module
-        ReleaseNotes = 'Ajout de la detection automatique de .nvmrc depuis le prompt PowerShell, avec installation a la demande de la version indiquee. Ajout de Enable-NodeAuto et mise en cache des verifications pour eviter les reactivations repetees.'
+        ReleaseNotes = 'La detection automatique de .nvmrc recherche maintenant dans le dossier courant et ses parents jusqu a la racine du lecteur. La version trouvee est installee a la demande et activee depuis le prompt PowerShell.'
 
     } # Fin de la table de hachage PSData
 

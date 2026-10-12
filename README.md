@@ -38,7 +38,7 @@ NodeManager solves this by:
 
 ### Option 1: From GitHub Release package (recommended for teammates)
 
-Download the zip asset from [Release 1.2.0](https://github.com/laruiss/NodeManager/releases/tag/1.2.0), extract it, then copy the `NodeManager` folder to your user modules path:
+Download the zip asset from [Release 1.3.0](https://github.com/laruiss/NodeManager/releases/tag/1.3.0), extract it, then copy the `NodeManager` folder to your user modules path:
 
 - Windows PowerShell: `$HOME\Documents\WindowsPowerShell\Modules\NodeManager`
 - PowerShell 7: `$HOME\Documents\PowerShell\Modules\NodeManager`
@@ -60,7 +60,7 @@ Importing the module automatically enables `.nvmrc` detection from the PowerShel
 Import-Module NodeManager
 ```
 
-When entering a directory containing a `.nvmrc`, NodeManager reads its version, downloads it if necessary, and activates it. The check is cached so the version is not reactivated after every command. The `.nvmrc` in the current directory takes precedence; parent directories and the home directory are not searched.
+When entering a directory containing a `.nvmrc`, NodeManager reads its version, downloads it if necessary, and activates it. The check is cached so the version is not reactivated after every command. NodeManager checks the current directory first, then each parent directory up to the drive root; the closest `.nvmrc` takes precedence.
 
 To load the feature automatically in every new PowerShell session, add the import to `$PROFILE`:
 
@@ -117,7 +117,7 @@ nrm 24.16.0
 
 ### Main functions
 
-- `Invoke-NodeAuto`: read `.nvmrc` in the current directory, install its version if needed, and activate it
+- `Invoke-NodeAuto`: search the current directory and its parents for `.nvmrc`, install its version if needed, and activate it
 - `Enable-NodeAuto`: enable automatic `.nvmrc` detection from the PowerShell prompt (enabled automatically when the module is imported)
 - `Get-NodeLatestLTS`: return latest LTS version
 - `Get-NodeRoot`: return storage root folder

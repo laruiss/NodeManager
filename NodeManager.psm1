@@ -7,14 +7,23 @@
 Lit un fichier .nvmrc et active la version Node correspondante.
 #>
 function Invoke-NodeAuto {
-    $nvmrc = Join-Path -Path (Get-Location).Path -ChildPath ".nvmrc"
-    $stateKey = $nvmrc
+    $directory = Get-Item -LiteralPath (Get-Location).Path
+    $nvmrc = $null
 
-    if (Test-Path -LiteralPath $nvmrc -PathType Leaf) {
-        $file = Get-Item -LiteralPath $nvmrc
-        $stateKey = "$nvmrc|$($file.LastWriteTimeUtc.Ticks)|$($file.Length)"
+    while ($directory) {
+        $candidate = Join-Path -Path $directory.FullName -ChildPath ".nvmrc"
+        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+            $nvmrc = Get-Item -LiteralPath $candidate
+            break
+        }
+
+        $directory = $directory.Parent
+    }
+
+    if ($nvmrc) {
+        $stateKey = "$($nvmrc.FullName)|$($nvmrc.LastWriteTimeUtc.Ticks)|$($nvmrc.Length)"
     } else {
-        $stateKey = "$nvmrc|missing"
+        $stateKey = "missing|$((Get-Location).Path)"
     }
 
     if ($script:nodeAutoLastState -eq $stateKey) {
@@ -23,8 +32,8 @@ function Invoke-NodeAuto {
 
     $script:nodeAutoLastState = $stateKey
 
-    if (Test-Path -LiteralPath $nvmrc -PathType Leaf) {
-        $version = (Get-Content -LiteralPath $nvmrc -Raw).Trim()
+    if ($nvmrc) {
+        $version = (Get-Content -LiteralPath $nvmrc.FullName -Raw).Trim()
         $version = $version -replace "^v", ""
 
         if (-not $version) {
@@ -32,7 +41,7 @@ function Invoke-NodeAuto {
             return
         }
 
-        Write-Host "Version détectée via .nvmrc : $version"
+        Write-Host "Version détectée via $($nvmrc.FullName) : $version"
         nodeuse -ShortVersion $version
     } else {
         Write-Host "Pas de .nvmrc trouvé."
